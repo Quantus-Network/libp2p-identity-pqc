@@ -41,6 +41,10 @@ impl DecodingError {
         }
     }
 
+    pub(crate) fn new(msg: String) -> Self {
+        Self { msg, source: None }
+    }
+
     #[cfg(any(
         feature = "ecdsa",
         feature = "secp256k1",

@@ -107,7 +107,7 @@ impl Keypair {
     /// Generate a new Ed25519 keypair.
     #[cfg(all(feature = "ed25519", feature = "rand"))]
     pub fn generate_ed25519() -> Keypair {
-        log::debug!(target: "libp2p-identity", "🔑 Generating Ed25519 keypair");
+        log::info!(target: "libp2p-identity", "🔑 Generating Ed25519 keypair");
         Keypair {
             keypair: KeyPairInner::Ed25519(ed25519::Keypair::generate()),
         }
@@ -116,7 +116,7 @@ impl Keypair {
     /// Generate a new Secp256k1 keypair.
     #[cfg(all(feature = "secp256k1", feature = "rand"))]
     pub fn generate_secp256k1() -> Keypair {
-        log::debug!(target: "libp2p-identity", "🔐 Generating Secp256k1 keypair");
+        log::info!(target: "libp2p-identity", "🔐 Generating Secp256k1 keypair");
         Keypair {
             keypair: KeyPairInner::Secp256k1(secp256k1::Keypair::generate()),
         }
@@ -125,7 +125,7 @@ impl Keypair {
     /// Generate a new ECDSA keypair.
     #[cfg(all(feature = "ecdsa", feature = "rand"))]
     pub fn generate_ecdsa() -> Keypair {
-        log::debug!(target: "libp2p-identity", "🔒 Generating ECDSA keypair");
+        log::info!(target: "libp2p-identity", "🔒 Generating ECDSA keypair");
         Keypair {
             keypair: KeyPairInner::Ecdsa(ecdsa::Keypair::generate()),
         }
@@ -133,7 +133,7 @@ impl Keypair {
 
     #[cfg(feature = "dilithium")]
     pub fn generate_dilithium() -> Keypair {
-        log::debug!(target: "libp2p-identity", "🛡️ Generating Dilithium (Post-Quantum) keypair");
+        log::info!(target: "libp2p-identity", "🛡️ Generating Dilithium (Post-Quantum) keypair");
         Keypair {
             keypair: KeyPairInner::Dilithium(ml_dsa_87::Keypair::generate(None)),
         }
@@ -372,7 +372,7 @@ impl Keypair {
                             keypair: KeyPairInner::Dilithium(key.into()),
                         })
                         .map_err(|e| {
-                            DecodingError::bad_protobuf("Bad dilithium private key protobuf", e)
+                            DecodingError::new(format!("Bad dilithium private key protobuf: {}", e))
                         });
 
                     Err(DecodingError::missing_feature("dilithium"))
@@ -886,7 +886,7 @@ impl TryFrom<proto::PublicKey> for PublicKey {
                     publickey: PublicKeyInner::Dilithium(kp),
                 })
                 .map_err(|e| {
-                    DecodingError::bad_protobuf("Unable to decode dilithium pubkey protobuf", e)
+                    DecodingError::new(format!("Unable to decode dilithium pubkey protobuf: {}", e))
                 })?),
             #[cfg(not(feature = "dilithium"))]
             proto::KeyType::Dilithium => {
