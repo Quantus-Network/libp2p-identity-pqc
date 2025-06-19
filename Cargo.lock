@@ -612,7 +612,7 @@ checksum = "d8cfeafaffdbc32176b64fb251369d52ea9f0a8fbc6f8759edffef7b525d64bb"
 
 [[package]]
 name = "libp2p-identity"
-version = "0.2.10"
+version = "0.2.11"
 dependencies = [
  "asn1_der",
  "bs58",
@@ -1041,7 +1041,7 @@ checksum = "8a0d197bd2c9dc6e53b84da9556a69ba4cdfab8619eb41a8bd1cc2027a0f6b1d"
 [[package]]
 name = "rusty-crystals-dilithium"
 version = "1.0.0"
-source = "git+https://github.com/quantus-network/rusty-crystals.git#380b4420252a6d12ef53b25f89b46907abd845a9"
+source = "git+https://github.com/quantus-network/rusty-crystals.git#9d51f1701a729a1f44bcbe165a2bfc269c330118"
 dependencies = [
  "rand 0.7.3",
  "sha2 0.10.9",

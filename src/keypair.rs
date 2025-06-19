@@ -465,7 +465,7 @@ impl Keypair {
 
     /// Return the secret key of the [`Keypair`].
     #[allow(dead_code)]
-    pub(crate) fn secret(&self) -> Option<Vec<u8>> {
+    pub fn secret(&self) -> Option<Vec<u8>> {
         match self.keypair {
             #[cfg(feature = "ed25519")]
             KeyPairInner::Ed25519(ref inner) => Some(inner.secret().to_bytes().to_vec()),
