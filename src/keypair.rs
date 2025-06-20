@@ -133,9 +133,13 @@ impl Keypair {
 
     #[cfg(feature = "dilithium")]
     pub fn generate_dilithium() -> Keypair {
-        log::info!(target: "libp2p-identity", "🛡️ Generating Dilithium (Post-Quantum) keypair");
+        log::info!(target: "libp2p-identity", "🛡️  Generating Dilithium (Post-Quantum) keypair");
+        // Use random entropy for std environments
+        use rand::RngCore;
+        let mut entropy = [0u8; 32];
+        rand::thread_rng().fill_bytes(&mut entropy);
         Keypair {
-            keypair: KeyPairInner::Dilithium(ml_dsa_87::Keypair::generate(None)),
+            keypair: KeyPairInner::Dilithium(ml_dsa_87::Keypair::generate(Some(&entropy))),
         }
     }
 
