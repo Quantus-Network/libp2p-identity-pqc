@@ -333,7 +333,7 @@ impl Keypair {
             match private_key.Type {
                 proto::KeyType::Ed25519 => {
                     #[cfg(feature = "ed25519")]
-                    return ed25519::Keypair::try_from_bytes(&mut private_key.Data).map(|sk| {
+                    return ed25519::Keypair::try_from_bytes(&*private_key.Data).map(|sk| {
                         Keypair {
                             keypair: KeyPairInner::Ed25519(sk),
                         }
@@ -342,26 +342,24 @@ impl Keypair {
                 }
                 proto::KeyType::RSA => {
                     #[cfg(all(feature = "rsa", not(target_arch = "wasm32")))]
-                    return rsa::Keypair::try_decode_pkcs1(&mut private_key.Data).map(|sk| {
-                        Keypair {
-                            keypair: KeyPairInner::Rsa(sk),
-                        }
+                    return rsa::Keypair::try_decode_pkcs1(&*private_key.Data).map(|sk| Keypair {
+                        keypair: KeyPairInner::Rsa(sk),
                     });
                     Err(DecodingError::missing_feature("rsa"))
                 }
                 proto::KeyType::Secp256k1 => {
                     #[cfg(feature = "secp256k1")]
-                    return secp256k1::SecretKey::try_from_bytes(&mut private_key.Data).map(
-                        |key| Keypair {
+                    return secp256k1::SecretKey::try_from_bytes(&*private_key.Data).map(|key| {
+                        Keypair {
                             keypair: KeyPairInner::Secp256k1(key.into()),
-                        },
-                    );
+                        }
+                    });
 
                     Err(DecodingError::missing_feature("secp256k1"))
                 }
                 proto::KeyType::ECDSA => {
                     #[cfg(feature = "ecdsa")]
-                    return ecdsa::SecretKey::try_decode_der(&mut private_key.Data).map(|key| {
+                    return ecdsa::SecretKey::try_decode_der(&*private_key.Data).map(|key| {
                         Keypair {
                             keypair: KeyPairInner::Ecdsa(key.into()),
                         }
