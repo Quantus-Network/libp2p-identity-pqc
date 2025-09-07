@@ -625,12 +625,12 @@ dependencies = [
  "log",
  "multihash",
  "p256",
+ "qp-rusty-crystals-dilithium",
  "quick-protobuf",
  "quickcheck",
  "rand 0.8.5",
  "ring",
  "rmp-serde",
- "rusty-crystals-dilithium",
  "sec1",
  "serde",
  "serde_json",
@@ -826,6 +826,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "02b3e5e68a3a1a02aad3ec490a98007cbc13c37cbe84a3cd7b8e406d76e7f778"
 dependencies = [
  "unicode-ident",
+]
+
+[[package]]
+name = "qp-rusty-crystals-dilithium"
+version = "1.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "10a4714f7b30092ec7595ad40a77d43ac0cd76eb802442ac192ab9b835db63ff"
+dependencies = [
+ "rand 0.7.3",
+ "sha2 0.10.9",
 ]
 
 [[package]]
@@ -1037,15 +1047,6 @@ name = "rustversion"
 version = "1.0.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8a0d197bd2c9dc6e53b84da9556a69ba4cdfab8619eb41a8bd1cc2027a0f6b1d"
-
-[[package]]
-name = "rusty-crystals-dilithium"
-version = "1.0.0"
-source = "git+https://github.com/quantus-network/rusty-crystals.git#380b4420252a6d12ef53b25f89b46907abd845a9"
-dependencies = [
- "rand 0.7.3",
- "sha2 0.10.9",
-]
 
 [[package]]
 name = "ryu"

@@ -52,6 +52,7 @@ impl DecodingError {
         feature = "rsa",
         feature = "dilithium"
     ))]
+    #[allow(dead_code)]
     pub(crate) fn failed_to_parse<E, S>(what: &'static str, source: S) -> Self
     where
         E: Error + Send + Sync + 'static,

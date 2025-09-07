@@ -53,6 +53,7 @@ use crate::{
     error::{DecodingError, SigningError},
     KeyType,
 };
+use qp_rusty_crystals_dilithium::ml_dsa_87;
 #[cfg(any(
     feature = "ecdsa",
     feature = "secp256k1",
@@ -61,7 +62,6 @@ use crate::{
     feature = "dilithium"
 ))]
 use quick_protobuf::{BytesReader, Writer};
-use rusty_crystals_dilithium::ml_dsa_87;
 
 /// Identity keypair of a node.
 ///
@@ -325,7 +325,7 @@ impl Keypair {
             log::trace!(target: "libp2p-identity", "📦 Decoding keypair from protobuf");
             use quick_protobuf::MessageRead;
             let mut reader = BytesReader::from_bytes(bytes);
-            let mut private_key = proto::PrivateKey::from_reader(&mut reader, bytes)
+            let private_key = proto::PrivateKey::from_reader(&mut reader, bytes)
                 .map_err(|e| DecodingError::bad_protobuf("private key bytes", e))
                 .map(zeroize::Zeroizing::new)?;
 
