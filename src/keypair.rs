@@ -53,6 +53,7 @@ use crate::{
     error::{DecodingError, SigningError},
     KeyType,
 };
+use qp_rusty_crystals_dilithium::ml_dsa_87;
 #[cfg(any(
     feature = "ecdsa",
     feature = "secp256k1",
@@ -61,7 +62,6 @@ use crate::{
     feature = "dilithium"
 ))]
 use quick_protobuf::{BytesReader, Writer};
-use rusty_crystals_dilithium::ml_dsa_87;
 
 /// Identity keypair of a node.
 ///
