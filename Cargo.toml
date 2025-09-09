@@ -1,6 +1,6 @@
 [package]
 categories = ["cryptography"]
-description = "Quantus Netowrk - Data structures and algorithms for identifying peers in libp2p."
+description = "Quantus Network - Data structures and algorithms for identifying peers in libp2p."
 edition = "2021"                                                                                  # MUST NOT inherit from workspace because we don't want to publish breaking changes to `libp2p-identity`.
 keywords = ["cryptography", "libp2p", "networking", "peer-to-peer"]
 license = "MIT"
