@@ -1,15 +1,12 @@
 [package]
-name = "libp2p-identity"
-version = "0.2.9"
-edition = "2021"                                                                # MUST NOT inherit from workspace because we don't want to publish breaking changes to `libp2p-identity`.
-description = "Data structures and algorithms for identifying peers in libp2p."
-rust-version = "1.73.0"                                                         # MUST NOT inherit from workspace because we don't want to publish breaking changes to `libp2p-identity`.
-license = "MIT"
-repository = "https://github.com/libp2p/rust-libp2p"
-keywords = ["peer-to-peer", "libp2p", "networking", "cryptography"]
 categories = ["cryptography"]
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+description = "Quantus Network - Data structures and algorithms for identifying peers in libp2p."
+edition = "2021"                                                                                  # MUST NOT inherit from workspace because we don't want to publish breaking changes to `libp2p-identity`.
+keywords = ["cryptography", "libp2p", "networking", "peer-to-peer"]
+license = "MIT"
+name = "libp2p-identity"
+repository = "https://github.com/Quantus-Network/qp-libp2p-identity"
+version = "0.2.10"
 
 [dependencies]
 asn1_der = { version = "0.7.6", optional = true }
@@ -20,10 +17,11 @@ libsecp256k1 = { version = "0.7.0", optional = true }
 log = "0.4.25"
 multihash = { version = "0.19.1", optional = true }
 p256 = { version = "0.13", default-features = false, features = [
-    "ecdsa",
-    "std",
-    "pem",
+	"ecdsa",
+	"pem",
+	"std",
 ], optional = true }
+qp-rusty-crystals-dilithium = { version = "1.0.1", optional = true }
 quick-protobuf = "0.8.1"
 rand = { version = "0.8", optional = true }
 sec1 = { version = "0.7", default-features = false, optional = true }
@@ -31,53 +29,48 @@ serde = { version = "1", optional = true, features = ["derive"] }
 sha2 = { version = "0.10.8", optional = true }
 thiserror = { version = "1.0", optional = true }
 zeroize = { version = "1.8", optional = true }
-qp-rusty-crystals-dilithium = { version="1.0.1", optional = true }
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 ring = { version = "0.17", features = ["alloc", "std"], optional = true }
 
 [features]
 default = ["dilithium"]
-secp256k1 = [
-    "dep:libsecp256k1",
-    "dep:asn1_der",
-    "dep:sha2",
-    "dep:hkdf",
-    "dep:zeroize",
-]
-ecdsa = ["dep:p256", "dep:zeroize", "dep:sec1", "dep:sha2", "dep:hkdf"]
-rsa = ["dep:ring", "dep:asn1_der", "dep:rand", "dep:zeroize"]
-ed25519 = ["dep:ed25519-dalek", "dep:zeroize", "dep:sha2", "dep:hkdf"]
-peerid = ["dep:multihash", "dep:bs58", "dep:thiserror", "dep:sha2", "dep:hkdf"]
-rand = ["dep:rand", "ed25519-dalek?/rand_core"]
 dilithium = [
-    "dep:qp-rusty-crystals-dilithium",
-    "dep:zeroize",
-    "dep:sha2",
-    "dep:hkdf",
-    "rand",
-    "peerid",
+	"dep:hkdf",
+	"dep:qp-rusty-crystals-dilithium",
+	"dep:sha2",
+	"dep:zeroize",
+	"peerid",
+	"rand",
+]
+ecdsa = ["dep:hkdf", "dep:p256", "dep:sec1", "dep:sha2", "dep:zeroize"]
+ed25519 = ["dep:ed25519-dalek", "dep:hkdf", "dep:sha2", "dep:zeroize"]
+peerid = ["dep:bs58", "dep:hkdf", "dep:multihash", "dep:sha2", "dep:thiserror"]
+rand = ["dep:rand", "ed25519-dalek?/rand_core"]
+rsa = ["dep:asn1_der", "dep:rand", "dep:ring", "dep:zeroize"]
+secp256k1 = [
+	"dep:asn1_der",
+	"dep:hkdf",
+	"dep:libsecp256k1",
+	"dep:sha2",
+	"dep:zeroize",
 ]
 
 [dev-dependencies]
-quickcheck = "1.0.3"
-serde_json = "1.0"
-rmp-serde = "1.3"
 criterion = "0.5"
-hex-literal = "0.4.1"
 env_logger = "0.10"
+hex-literal = "0.4.1"
+quickcheck = "1.0.3"
+rmp-serde = "1.3"
+serde_json = "1.0"
 
 [[bench]]
+harness = false
 name = "peer_id"
-harness = false
 
 [[bench]]
-name = "crypto_operations"
 harness = false
-
-
-
-
+name = "crypto_operations"
 
 # Passing arguments to the docsrs builder in order to properly document cfg's.
 # More information: https://docs.rs/about/builds#cross-compiling
