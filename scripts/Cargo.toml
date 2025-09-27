@@ -1,0 +1,12 @@
+[package]
+name = "keypair_to_hex"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "keypair_to_hex"
+path = "keypair_to_hex.rs"
+
+[dependencies]
+libp2p-identity = { path = "..", features = ["dilithium"] }
+hex = "0.4"
