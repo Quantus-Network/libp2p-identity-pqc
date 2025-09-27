@@ -198,11 +198,12 @@ impl Keypair {
     }
 
     #[cfg(feature = "dilithium")]
-    pub fn dilithium_from_bytes(mut bytes: impl AsMut<[u8]>) -> Result<Keypair, DecodingError> {
+    pub fn dilithium_from_bytes(bytes: &[u8]) -> Result<Keypair, DecodingError> {
         log::debug!(target: "libp2p-identity", "🔐 Loading Dilithium keypair from bytes");
-        let b = bytes.as_mut();
         Ok(Keypair {
-            keypair: KeyPairInner::Dilithium(ml_dsa_87::Keypair::from_bytes(b).map_err(|e| DecodingError::new(format!("failed to decode Dilithium keypair: {}", e)))?),
+            keypair: KeyPairInner::Dilithium(ml_dsa_87::Keypair::from_bytes(bytes).map_err(
+                |e| DecodingError::new(format!("failed to decode Dilithium keypair: {}", e)),
+            )?),
         })
     }
 
