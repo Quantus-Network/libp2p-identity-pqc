@@ -197,6 +197,24 @@ impl Keypair {
         })
     }
 
+    #[cfg(feature = "dilithium")]
+    pub fn dilithium_from_bytes(bytes: &[u8]) -> Result<Keypair, DecodingError> {
+        log::debug!(target: "libp2p-identity", "🔐 Loading Dilithium keypair from bytes");
+        Ok(Keypair {
+            keypair: KeyPairInner::Dilithium(ml_dsa_87::Keypair::from_bytes(bytes).map_err(
+                |e| DecodingError::new(format!("failed to decode Dilithium keypair: {}", e)),
+            )?),
+        })
+    }
+
+    #[cfg(feature = "dilithium")]
+    pub fn dilithium_to_bytes(&self) -> Vec<u8> {
+        match self.keypair {
+            KeyPairInner::Dilithium(ref pair) => pair.to_bytes().to_vec(),
+            _ => unreachable!(),
+        }
+    }
+
     /// Sign a message using the private key of this keypair, producing
     /// a signature that can be verified using the corresponding public key.
     #[allow(unused_variables)]
@@ -1231,6 +1249,44 @@ mod tests {
 
         assert_eq!(converted_pubkey, pubkey);
         assert_eq!(converted_pubkey.key_type(), KeyType::Dilithium)
+    }
+
+    #[test]
+    #[cfg(feature = "dilithium")]
+    fn test_dilithium_bytes_roundtrip() {
+        // Generate a new dilithium keypair
+        let original_keypair = Keypair::generate_dilithium();
+
+        // Convert to bytes
+        let bytes = original_keypair.dilithium_to_bytes();
+
+        // Convert back from bytes
+        let roundtrip_keypair = Keypair::dilithium_from_bytes(bytes.clone()).unwrap();
+
+        // Verify that the roundtrip keypair produces the same bytes
+        let roundtrip_bytes = roundtrip_keypair.dilithium_to_bytes();
+        assert_eq!(
+            bytes, roundtrip_bytes,
+            "Original and roundtrip bytes should be identical"
+        );
+
+        // Verify that both keypairs have the same public key
+        assert_eq!(
+            original_keypair.public(),
+            roundtrip_keypair.public(),
+            "Original and roundtrip keypairs should have the same public key"
+        );
+
+        // Verify that both keypairs can sign and verify the same message
+        let message = b"test message for dilithium roundtrip";
+        let signature1 = original_keypair.sign(message).unwrap();
+        let signature2 = roundtrip_keypair.sign(message).unwrap();
+
+        // Both signatures should be verifiable by both public keys
+        assert!(original_keypair.public().verify(message, &signature1));
+        assert!(original_keypair.public().verify(message, &signature2));
+        assert!(roundtrip_keypair.public().verify(message, &signature1));
+        assert!(roundtrip_keypair.public().verify(message, &signature2));
     }
 
     #[test]
